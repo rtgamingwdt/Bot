@@ -1,14 +1,13 @@
-import { CategoryChannel } from "discord.js";
-import ClientBase from "./ClientBase"
+const { CategoryChannel } = require("discord.js");
+const ClientBase = require("./ClientBase");
 
-export default class Utility {
-    client: ClientBase
+module.exports = class Utility {
 
     constructor(options = new ClientBase()) {
         this.client = options;
     }
 
-    public async getGuild(id : string | undefined) {
+    async getGuild(id) {
 
         const guild = this.client.guilds.cache.get(`${id}`);
 

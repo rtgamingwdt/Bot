@@ -1,10 +1,9 @@
-import { SlashCommandBuilder } from "@discordjs/builders";
-import { CommandInteraction, CacheType, MessageEmbed } from "discord.js";
-import ClientBase from "../../ClientBase";
-import Command from "../../Command";
-import Utility from "../../Utility";
+const Command = require("../../Command");
+const { SlashCommandBuilder } = require("@discordjs/builders");
+const { CommandInteraction, MessageEmbed } = require("discord.js");
+const ClientBase = require("../../ClientBase");
 
-export default new class ServerInfo extends Command {
+module.exports = new class ServerInfo extends Command {
 
     constructor() {
         super(
@@ -15,7 +14,7 @@ export default new class ServerInfo extends Command {
         )
     }
 
-    public async execute(client: ClientBase, interaction: CommandInteraction) {
+    async execute(client, interaction) {
         const guild = await client.util.getGuild(interaction.guild?.id);
         interaction.reply({embeds: [
             new MessageEmbed()

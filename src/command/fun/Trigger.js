@@ -1,10 +1,10 @@
-import { SlashCommandBuilder } from "@discordjs/builders";
-import { CommandInteraction, CacheType, MessageAttachment } from "discord.js";
-import ClientBase from "../../ClientBase";
-import Command from "../../Command";
-import { Canvacord } from "canvacord";
+const Command = require("../../Command");
+const { SlashCommandBuilder } = require("@discordjs/builders");
+const { CommandInteraction, MessageEmbed } = require("discord.js");
+const ClientBase = require("../../ClientBase");
+const {Canvacord} = require("canvacord");
 
-export default new class Trigger extends Command {
+module.exports = new class Trigger extends Command {
     
     constructor() {
         super(
@@ -20,11 +20,11 @@ export default new class Trigger extends Command {
         )
     }
 
-    public async execute(client: ClientBase, interaction: CommandInteraction<CacheType>) {
+    async execute(client, interaction) {
         const avatar = interaction.options.getUser("user");
         const image = await Canvacord.trigger(avatar?.displayAvatarURL({
             format: "png"
-        })!);
+        }));
 
         await interaction.reply({files: [
             new MessageAttachment(image, "trigger.gif")

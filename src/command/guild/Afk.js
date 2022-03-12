@@ -1,25 +1,25 @@
-import Command from "../../Command";
-import { SlashCommandBuilder } from "@discordjs/builders";
-import ClientBase from "../../ClientBase";
-import AfkModel from "../../model/AfkModel";
-import { CommandInteraction, MessageEmbed } from "discord.js";
+const Command = require("../../Command");
+const { SlashCommandBuilder } = require("@discordjs/builders");
+const { CommandInteraction, MessageEmbed } = require("discord.js");
+const ClientBase = require("../../ClientBase");
+const AfkModel = require("../../model/AfkModel");
 
-export default new class Afk extends Command {
+module.exports = new class Afk extends Command {
 
     constructor() {
         super(
             new SlashCommandBuilder()
             .setName("afk")
-            .setDescription("Set an afk status!")
-            .addStringOption((option) => option.setName("status").setDescription("Your afk status!").setRequired(true))
+            .setDescription("Set an afk status")
+            .addStringOption((option) => option.setName("status").setDescription("Your afk status").setRequired(true))
             .setDefaultPermission(true)
         )
     }
 
-    public async execute(client: ClientBase, interaction: CommandInteraction) {
+    async execute(client, interaction) {
         await AfkModel.findOneAndUpdate({
-            GuildID: interaction.guild!.id,
-            UserID: interaction.user!.id
+            GuildID: interaction.guild.id,
+            UserID: interaction.user.id
         }, {
             Status: interaction.options.getString("status"),
             Time: parseInt(`${interaction.createdTimestamp / 1000}`)
@@ -29,7 +29,7 @@ export default new class Afk extends Command {
         }).then(() => {
             interaction.reply({embeds: [
                 new MessageEmbed()
-                .setTitle(`You are now AFK!`)
+                .setTitle(`You are now AFK`)
                 .setDescription(`**Message:** ${interaction.options.getString("status")}`)
                 .setColor("GREEN")
             ]})

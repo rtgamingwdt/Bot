@@ -2,10 +2,10 @@
   "name": "bot",
   "version": "1.0.0",
   "description": "",
-  "main": "src/Main.ts",
+  "main": "src/Main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "ts-node ."
+    "start": "node ."
   },
   "keywords": [],
   "author": "",

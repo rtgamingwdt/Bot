@@ -1,10 +1,10 @@
-import Command from "../../Command";
-import { SlashCommandBuilder } from "@discordjs/builders";
-import ClientBase from "../../ClientBase";
-import { CommandInteraction, MessageEmbed } from "discord.js";
-import EconomyModel from "../../model/EconomyModel";
+const Command = require("../../Command");
+const { SlashCommandBuilder } = require("@discordjs/builders");
+const ClientBase = require("../../ClientBase");
+const { CommandInteraction, MessageEmbed } = require("discord.js");
+const EconomyModel = require("../../model/EconomyModel");
 
-export default new class AddMoney extends Command {
+module.exports = new class AddMoney extends Command {
 
     constructor() {
         super(
@@ -17,14 +17,14 @@ export default new class AddMoney extends Command {
         )
     }
 
-    public async execute(client: ClientBase, interaction: CommandInteraction) {
+    async execute(client, interaction) {
         const economyModel = await EconomyModel.findOne({
-            UserID: interaction.options.getUser("user")!.id
+            UserID: interaction.options.getUser("user").id
         });
 
         if(economyModel) {
             await EconomyModel.findOneAndUpdate({
-                UserID: interaction.options.getUser("user")!.id
+                UserID: interaction.options.getUser("user").id
             }, {
                 Balance: parseInt(economyModel.Balance + interaction.options.getInteger("amount"))
             }, {
@@ -33,7 +33,7 @@ export default new class AddMoney extends Command {
             }).then(() => {
                 interaction.reply({embeds: [
                     new MessageEmbed()
-                    .setDescription(`**Message:** Added ${interaction.options.getInteger("amount")} coins to ${interaction.options.getUser("user")!.tag}'s balance!`)
+                    .setDescription(`**Message:** Added ${interaction.options.getInteger("amount")} coins to ${interaction.options.getUser("user").tag}'s balance!`)
                     .setColor("GREEN")
                 ]})
             }).catch((err) => {
@@ -52,7 +52,7 @@ export default new class AddMoney extends Command {
         } else {
             interaction.reply({embeds: [
                 new MessageEmbed()
-                .setDescription(`Couldn't find any economy data for ${interaction.options.getUser("user")!.tag}`)
+                .setDescription(`Couldn't find any economy data for ${interaction.options.getUser("user").tag}`)
                 .setColor("RED")
             ]})
         }

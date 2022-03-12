@@ -1,6 +1,6 @@
-export default class Constants {
+module.exports = class Constants {
 
-    public static ECONOMY_SEARCH_LIST = [
+    static ECONOMY_SEARCH_LIST = [
         "You found <amount> coins in the air, how the...?",
         "You looked up in the air, and found nothing.",
         "You found <amount> coins in Area 51, NOW RUN THE GOVERNMENT IS COMING",

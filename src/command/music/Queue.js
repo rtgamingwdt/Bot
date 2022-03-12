@@ -1,10 +1,9 @@
-import { SlashCommandBuilder } from "@discordjs/builders";
+const Command = require("../../Command");
+const { SlashCommandBuilder } = require("@discordjs/builders");
+const { CommandInteraction, MessageEmbed } = require("discord.js");
+const ClientBase = require("../../ClientBase");
 
-import { BaseGuildTextChannel, CommandInteraction, GuildBasedChannel, GuildTextBasedChannel, MessageEmbed, TextBasedChannel, VoiceBasedChannel } from 'discord.js';
-import Command from '../../Command';
-import ClientBase from "../../ClientBase";
-
-export default new class Queue extends Command {
+module.exports = new class Queue extends Command {
 
     constructor() {
         super(
@@ -15,8 +14,8 @@ export default new class Queue extends Command {
         )
     }
 
-    public async execute(client: ClientBase, interaction: CommandInteraction) {
-        const queue = client.getMusicManager().getQueue(interaction.guild!.id);
+    async execute(client, interaction) {
+        const queue = client.getMusicManager().getQueue(interaction.guild.id);
         if (!queue) return interaction.reply(`There is nothing playing!`);
         const songs = queue.songs
             .map((song, i) => `${i === 0 ? '**Playing:**' : `${i}.`} ${song.name} - \`${song.formattedDuration}\``)

@@ -1,10 +1,10 @@
-import Command from "../../Command";
-import { SlashCommandBuilder } from "@discordjs/builders";
-import { CommandInteraction, MessageEmbed } from "discord.js";
-import ClientBase from "../../ClientBase";
-import EconomyModel from "../../model/EconomyModel";
+const Command = require("../../Command");
+const { SlashCommandBuilder } = require("@discordjs/builders");
+const { CommandInteraction, MessageEmbed } = require("discord.js");
+const ClientBase = require("../../ClientBase");
+const EconomyModel = require("../../model/EconomyModel");
 
-export default new class Start extends Command {
+module.exports = new class Start extends Command {
 
     constructor() {
         super(
@@ -15,14 +15,14 @@ export default new class Start extends Command {
         )
     }
 
-    public async execute(client: ClientBase, interaction: CommandInteraction) {
+    async execute(client, interaction) {
         const economyModel = await EconomyModel.findOne({
-            UserID: interaction.user!.id
+            UserID: interaction.user.id
         });
 
         if(economyModel) { 
             EconomyModel.findOneAndUpdate({
-                UserID: interaction.user!.id
+                UserID: interaction.user.id
             }, {
                 Balance: 0
             }, {

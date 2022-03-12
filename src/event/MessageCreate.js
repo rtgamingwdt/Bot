@@ -1,25 +1,25 @@
-import { Message, MessageEmbed } from "discord.js";
-import ClientBase from "../ClientBase";
-import Event from "../Event";
-import AfkModel from "../model/AfkModel";
+const { Message, MessageEmbed } = require("discord.js");
+const ClientBase = require("../ClientBase");
+const Event = require("../Event");
+const AfkModel = require("../model/AfkModel");
 
-export default new class MessageCreate extends Event {
+module.exports = new class MessageCreate extends Event {
 
     constructor() {
         super("messageCreate", false);
     }
 
-    public async execute(client: ClientBase, message: Message) {
+    async execute(client, message) {
         if(message.channel.type == "DM") return;
         if(message.author.bot) return;
 
         if(await AfkModel.findOne({
             GuildID: message.guild?.id,
-            UserID: message.author!.id
+            UserID: message.author.id
         })) {
             AfkModel.deleteOne({
-                GuildID: message.guild?.id,
-                UserID: message.author!.id
+                GuildID: message.guild.id,
+                UserID: message.author.id
             }).then(() => {
                 message.channel.send({embeds: [
                     new MessageEmbed()

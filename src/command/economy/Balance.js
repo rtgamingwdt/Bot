@@ -1,10 +1,10 @@
-import Command from "../../Command";
-import { SlashCommandBuilder } from "@discordjs/builders";
-import ClientBase from "../../ClientBase";
-import { CommandInteraction, MessageEmbed } from "discord.js";
-import EconomyModel from "../../model/EconomyModel";
+const Command = require("../../Command");
+const { SlashCommandBuilder } = require("@discordjs/builders");
+const ClientBase = require("../../ClientBase");
+const { CommandInteraction, MessageEmbed } = require("discord.js");
+const EconomyModel = require("../../model/EconomyModel");
 
-export default new class Balance extends Command {
+module.exports = new class Balance extends Command {
 
     constructor() {
         super(
@@ -16,22 +16,22 @@ export default new class Balance extends Command {
         )
     }
 
-    public async execute(client: ClientBase, interaction: CommandInteraction) {
+    async execute(client, interaction) {
         const economyModel = await EconomyModel.findOne({
-            UserID: interaction.options.getUser("user")!.id
+            UserID: interaction.options.getUser("user").id
         });
 
         if(economyModel) { 
             interaction.reply({embeds: [
                 new MessageEmbed()
-                .setTitle(`${interaction.options.getUser("user")!.tag}'s Balance`)
+                .setTitle(`${interaction.options.getUser("user").tag}'s Balance`)
                 .setDescription(`**Balance:** ${economyModel.Balance} coins`)
                 .setColor("GREEN")
             ]})
         } else {
             interaction.reply({embeds: [
                 new MessageEmbed()
-                .setTitle(`${interaction.options.getUser("user")!.tag}'s Balance`)
+                .setTitle(`${interaction.options.getUser("user").tag}'s Balance`)
                 .setDescription(`They don't have anything yet. They can get started by using the \`start\` command!`)
                 .setColor("RED")
             ]})

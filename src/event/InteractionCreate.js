@@ -1,14 +1,14 @@
-import { CommandInteraction } from "discord.js";
-import ClientBase from "../ClientBase";
-import Event from "../Event"
+const { CommandInteraction } = require("discord.js");
+const ClientBase = require("../ClientBase");
+const Event = require("../Event");
 
-export default new class InteractionCreate extends Event {
+module.exports = new class InteractionCreate extends Event {
 
     constructor() {
         super("interactionCreate", false);
     }
 
-    public async execute(client: ClientBase, interaction: CommandInteraction) {
+    async execute(client, interaction) {
         if(!interaction.isCommand) return;
         
         const command = client.commandMap.get(interaction.commandName);

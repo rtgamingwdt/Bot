@@ -1,10 +1,10 @@
-import { SlashCommandBuilder } from "@discordjs/builders";
-import { CommandInteraction, CacheType, MessageEmbed } from "discord.js";
-import axios from "axios";
-import ClientBase from "../../ClientBase";
-import Command from "../../Command";
+const Command = require("../../Command");
+const { SlashCommandBuilder } = require("@discordjs/builders");
+const { CommandInteraction, MessageEmbed } = require("discord.js");
+const ClientBase = require("../../ClientBase");
+const axios = require('axios');
 
-export default new class EightBall extends Command {
+module.exports = new class EightBall extends Command {
 
     constructor() {
         super(
@@ -15,7 +15,7 @@ export default new class EightBall extends Command {
             )
     }
 
-    public async execute(client: ClientBase, interaction: CommandInteraction<CacheType>) {
+    async execute(client, interaction) {
         await axios.get("https://api.adviceslip.com/advice").then((response) => {
             interaction.reply({embeds: [
                 new MessageEmbed()

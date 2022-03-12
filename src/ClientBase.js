@@ -1,21 +1,13 @@
-import { SlashCommandBuilder } from "@discordjs/builders";
-import { BaseGuildTextChannel, Client, Collection, Intents } from "discord.js";
-import { config } from "dotenv";
-import { readdirSync } from "fs";
-import Command from "./Command";
-import Event from "./Event";
-import Utility from "./Utility";
-import { REST } from '@discordjs/rest';
-import { Routes } from 'discord-api-types/v9';
-import DisTube, { Queue } from 'distube';
-import { connect } from 'mongoose';
+const { Client, Collection, Intents } = require("discord.js");
+const { config } = require("dotenv");
+const { readdirSync } = require("fs");
+const Utility = require("./Utility");
+const { REST } = require('@discordjs/rest');
+const { Routes } = require('discord-api-types/v9');
+const DisTube = require('distube').default;
+const { connect } = require('mongoose');
 
-export default class ClientBase extends Client {
-    config: NodeJS.ProcessEnv;
-    commands: any[];
-    commandMap: Collection<String, Command>;
-    util: Utility;
-    distube: DisTube;
+module.exports = class ClientBase extends Client {
 
     constructor(options = {}) {
         super({
@@ -37,7 +29,7 @@ export default class ClientBase extends Client {
         this.util = new Utility(this);
     }
 
-    public async build() {
+    async build() {
         // await scdl.connect();
         this.login(this.config.TOKEN);
         this.connectDB();
@@ -45,7 +37,7 @@ export default class ClientBase extends Client {
         this.handleCommands();
     }
 
-    public async connectDB() {
+    async connectDB() {
         if(this.config.DATABASE) {
             await connect(this.config.DATABASE).then(() => {
                 console.log("CONNECTED TO DATABASE!")
@@ -57,11 +49,11 @@ export default class ClientBase extends Client {
         }
     }
 
-    public async handleEvents() {
+    async handleEvents() {
         const files = readdirSync("src/event");
 
         for (const file of files) {
-            const event: Event = require(`./event/${file}`).default;
+            const event = require(`./event/${file}`);
 
             if (event.isOnce()) {
                 this.once(event.getName(), event.execute.bind(null, this));
@@ -70,23 +62,23 @@ export default class ClientBase extends Client {
             }
         }
 
-        const status = (queue: Queue) =>
+        const status = (queue) =>
             `Volume: \`${queue.volume}%\` | Filter: \`${queue.filters.join(', ') || 'Off'}\` | Loop: \`${queue.repeatMode ? (queue.repeatMode === 2 ? 'All Queue' : 'This Song') : 'Off'
             }\` | Autoplay: \`${queue.autoplay ? 'On' : 'Off'}\``
         this.distube
             .on('playSong', (queue, song) =>
-                queue.textChannel!.send(
+                queue.textChannel.send(
                     `Playing \`${song.name}\` - \`${song.formattedDuration}\`\nRequested by: ${song.user
                     }\n${status(queue)}`
                 )
             )
             .on('addSong', (queue, song) =>
-                queue.textChannel!.send(
+                queue.textChannel.send(
                     `Added ${song.name} - \`${song.formattedDuration}\` to the queue by ${song.user}`
                 )
             )
             .on('addList', (queue, playlist) =>
-                queue.textChannel!.send(
+                queue.textChannel.send(
                     `Added \`${playlist.name}\` playlist (${playlist.songs.length
                     } songs) to queue\n${status(queue)}`
                 )
@@ -95,28 +87,28 @@ export default class ClientBase extends Client {
                 channel.send(`An error encountered: ${e.toString().slice(0, 1974)}`)
                 console.error(e)
             })
-            .on('empty', queue => queue.textChannel!.send('Voice channel is empty! Leaving the channel...'))
+            .on('empty', queue => queue.textChannel.send('Voice channel is empty! Leaving the channel...'))
             .on('searchNoResult', (message, query) =>
                 message.channel.send(`No result found for \`${query}\`!`)
             )
-            .on('finish', queue => queue.textChannel!.send('Finished!'))
+            .on('finish', queue => queue.textChannel.send('Finished!'))
     }
 
-    public async handleCommands() {
+    async handleCommands() {
         const folders = readdirSync("src/command");
 
         for (const folder of folders) {
             const files = readdirSync(`src/command/${folder}`);
 
             for (const file of files) {
-                const command: Command = require(`./command/${folder}/${file}`).default;
+                const command = require(`./command/${folder}/${file}`);
 
                 this.commandMap.set(command.get.name, command);
                 this.commands.push(command.get.toJSON());
             }
         }
 
-        const rest = new REST({ version: '9' }).setToken(this.config.TOKEN!);
+        const rest = new REST({ version: '9' }).setToken(this.config.TOKEN);
 
         (async () => {
             try {
@@ -134,15 +126,15 @@ export default class ClientBase extends Client {
         })();
     }
 
-    public async getConfig() {
+    async getConfig() {
         return this.config;
     }
 
-    public async getCommand(command: String) {
+    async getCommand(command) {
         return this.commandMap.get(command);
     }
 
-    public getMusicManager() {
+    getMusicManager() {
         return this.distube;
     }
 }
