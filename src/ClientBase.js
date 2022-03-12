@@ -115,7 +115,7 @@ module.exports = class ClientBase extends Client {
                 console.log('Started refreshing application (/) commands.');
 
                 await rest.put(                     //CLIENT ID             //GUILD ID
-                    Routes.applicationGuildCommands("941785047692898354", "948135520955932702"),
+                    Routes.applicationCommands("941785047692898354"),
                     { body: this.commands },
                 );
 
