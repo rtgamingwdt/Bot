@@ -3,6 +3,7 @@ const { SlashCommandBuilder } = require("@discordjs/builders");
 const { CommandInteraction, MessageEmbed } = require("discord.js");
 const ClientBase = require("../../ClientBase");
 const EconomyModel = require("../../model/EconomyModel");
+const Constants = require("../../Constants");
 
 module.exports = new class Search extends Command {
 
