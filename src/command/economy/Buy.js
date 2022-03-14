@@ -2,24 +2,24 @@ const Command = require("../../Command");
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { CommandInteraction, MessageEmbed } = require("discord.js");
 const ClientBase = require("../../ClientBase");
+const EconomyModel = require("../../model/EconomyModel");
 
-module.exports = new class Resume extends Command {
+module.exports = new class Buy extends Command {
 
     constructor() {
         super(
             new SlashCommandBuilder()
-                .setName("resume")
-                .setDescription("Resume a song!")
+                .setName("buy")
+                .setDescription("Want to buy something?")
                 .setDefaultPermission(true)
         )
     }
 
     async execute(client, interaction) {
-        client.getMusicManager().resume(interaction.guild.id);
-        interaction.channel.send({embeds: [
-            new MessageEmbed()
-            .setDescription("Successfully resumed the song!")
-            .setColor("BLUE")
-        ]})
+        const economyModel = await EconomyModel.findOne({
+            UserID: interaction.user.id
+        });
+
+       interaction.reply("Coming Soon maybe?")
     }
 }

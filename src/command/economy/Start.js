@@ -9,9 +9,9 @@ module.exports = new class Start extends Command {
     constructor() {
         super(
             new SlashCommandBuilder()
-            .setName("start")
-            .setDescription("Want to get started with some economy?")
-            .setDefaultPermission(true)
+                .setName("start")
+                .setDescription("Want to get started with some economy?")
+                .setDefaultPermission(true)
         )
     }
 
@@ -20,33 +20,41 @@ module.exports = new class Start extends Command {
             UserID: interaction.user.id
         });
 
-        if(!economyModel) { 
+        if (!economyModel) {
             await EconomyModel.create({
                 UserID: interaction.user.id,
                 Balance: 0
             }).then(() => {
-                interaction.reply({embeds: [
-                    new MessageEmbed()
-                    .setTitle(`SETUP COMPLETE`)
-                    .setDescription(`Setup was complete you now have \`0\` coins! Use economy commands to gain more coins!`)
-                    .setColor("GREEN")
-                ]})
+                interaction.reply({
+                    embeds: [
+                        new MessageEmbed()
+                            .setTitle(`SETUP COMPLETE`)
+                            .setDescription("Setup was complete you now have `0` coins! Keep doing things to gain more coins!")
+                            .setColor("GREEN")
+                    ]
+                })
             }).catch((err) => {
                 console.log(err);
-                interaction.reply({embeds: [
-                    new MessageEmbed()
-                    .setTitle("ERROR")
-                    .setDescription("**Error:** An error has occured.")
-                    .setColor("RED")
-                ]})
+                interaction.reply({
+                    embeds: [
+                        new MessageEmbed()
+                            .setTitle("ERROR")
+                            .setDescription("**Error:** An error has occured.")
+                            .setColor("RED")
+                    ],
+                    ephemeral: true
+                })
             })
         } else {
-            interaction.reply({embeds: [
-                new MessageEmbed()
-                .setTitle(`SETUP FAILED`)
-                .setDescription(`You have already started? Want to restart? Use the \`restart\` command!`)
-                .setColor("RED")
-            ]})
+            interaction.reply({
+                embeds: [
+                    new MessageEmbed()
+                        .setTitle(`SETUP FAILED`)
+                        .setDescription(`You have already started? Want to restart? Use the \`restart\` command!`)
+                        .setColor("RED")
+                ],
+                ephemeral: true
+            })
         }
     }
 }
